@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SimulationFrame extends JFrame {
-    private JTextField textArea;
+    private JTextArea textArea;
 
     public SimulationFrame() {
         setTitle("Queues Management Application");
@@ -12,7 +12,7 @@ public class SimulationFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        textArea = new JTextField();
+        textArea = new JTextArea();
         textArea.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(textArea);

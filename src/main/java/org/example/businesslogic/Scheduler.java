@@ -14,7 +14,7 @@ public class Scheduler {
     private int maxTasksPerServer;
     private Strategy strategy;
 
-    public Scheduler(int maxNoServers, int maxTasksPerServers){
+    public Scheduler(int maxNoServers, int maxTasksPerServer){
         this.maxNoServers = maxNoServers;
         this.maxTasksPerServer = maxTasksPerServer;
         this.servers = new ArrayList<>();

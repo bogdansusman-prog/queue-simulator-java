@@ -25,7 +25,6 @@ public class SimulationManager implements Runnable{
     private SimulationFrame frame;
     //pool of tasks (client shopping in the store)
     private List<Task> generatedTasks;
-    private List<Server> generatedServers;
 
     public SimulationManager(){
         //initialize the scheduler
@@ -47,7 +46,7 @@ public class SimulationManager implements Runnable{
         //generate N random tasks;
         Random random = new Random();
 
-        for(int i=1;i<=numberOfServers;i++){
+        for(int i=1;i<=numberOfClients;i++){
             // - random provcessing
             // -minProcessingTime < processingTime < maxProcessingTme
             int serviceTime = random.nextInt(maxProcessingTime - minProcessingTime + 1)+minProcessingTime;

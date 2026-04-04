@@ -37,10 +37,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "ID=" + ID +
-                ", arrivalTime=" + arrivalTime +
-                ", serviceTime=" + serviceTime +
-                '}';
+        return "(" + ID + ", " + arrivalTime + ", " + serviceTime + ")";
     }
 }

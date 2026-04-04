@@ -40,6 +40,8 @@ public class Server implements Runnable {
                     if (currentTask.getServiceTime() == 0) {
                         tasks.take();
                     }
+                } else{
+                    Thread.sleep(100);
                 }
             }catch (InterruptedException e){
                 Thread.currentThread().interrupt();
