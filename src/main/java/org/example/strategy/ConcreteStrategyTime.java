@@ -16,7 +16,7 @@ public class ConcreteStrategyTime implements Strategy {
         Server minServer = servers.get(0);
 
         for(Server server : servers){
-            if(server.getWaitingPeriod().get() < minServer.getWaitingPeriod().get()){
+            if(server.getWaitingPeriod() < minServer.getWaitingPeriod()){
                 minServer = server;
             }
         }

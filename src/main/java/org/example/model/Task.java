@@ -1,42 +1,65 @@
 package org.example.model;
 
 public class Task {
-    private int ID;
-    private int arrivalTime;
-    private int serviceTime;
+    private final int id;
+    private final int arrivalTime;
+    private final int serviceTime;
+    private int remainingServiceTime;
+    private int waitingTime;
+    private int startTime = -1;
 
-    public Task(int ID, int arrivalTime, int serviceTime) {
-        this.ID = ID;
+    public Task(int id, int arrivalTime, int serviceTime) {
+        this.id = id;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
+        this.remainingServiceTime = serviceTime;
+        this.waitingTime = 0;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
+    public int getId() {
+        return id;
     }
 
     public int getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(int arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
 
     public int getServiceTime() {
         return serviceTime;
     }
 
-    public void setServiceTime(int serviceTime) {
-        this.serviceTime = serviceTime;
+    public int getRemainingServiceTime() {
+        return remainingServiceTime;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime){
+        if(this.startTime == -1){
+            this.startTime = startTime;
+            this.waitingTime = startTime - arrivalTime;
+        }
+    }
+
+    public void decreaseRemainingServiceTime(){
+        if(this.remainingServiceTime > 0){
+            remainingServiceTime--;
+        }
+    }
+
+    public boolean isFinished(){
+        return remainingServiceTime == 0;
     }
 
     @Override
     public String toString() {
-        return "(" + ID + ", " + arrivalTime + ", " + serviceTime + ")";
+        return "(" + id + ", " + arrivalTime + ", " + remainingServiceTime + ")";
     }
 }

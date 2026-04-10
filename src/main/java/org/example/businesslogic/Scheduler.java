@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
-    private List<Server> servers;
-    private int maxNoServers;
-    private int maxTasksPerServer;
+    private final List<Server> servers;
+    private final int maxNoServers;
+    private final int maxTasksPerServer;
     private Strategy strategy;
 
     public Scheduler(int maxNoServers, int maxTasksPerServer){
@@ -37,17 +37,48 @@ public class Scheduler {
         if(policy == SelectionPolicy.SHORTEST_QUEUE){
             strategy = new ConcreteStrategyQueue();
         }
-        if(policy == SelectionPolicy.SHORTEST_TIME){
+        else if(policy == SelectionPolicy.SHORTEST_TIME){
             strategy = new ConcreteStrategyTime();
         }
     }
 
-    public void dispatchTask(Task task){
+    public void dispatchTask(Task task) {
         //call the strategy addTask method
-        strategy.addTask(servers, task);
+        if (strategy != null) {
+            strategy.addTask(servers, task);
+        }
     }
 
     public List<Server> getServers(){
         return servers;
+    }
+
+    public boolean allQueuesEmpty(){
+        for(Server server : servers){
+            if(!server.isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int getTotalClientsInQueues(){
+        int total = 0;
+        for(Server server : servers){
+            total += server.getQueueSize();
+        }
+        return total;
+    }
+
+    public void stopAllServers(){
+        for(Server server : servers){
+            server.stopServer();
+        }
+    }
+
+    public void updateServerTimes(int currentTime) {
+        for(Server server : servers){
+            server.setCurrentTime(currentTime);
+        }
     }
 }
