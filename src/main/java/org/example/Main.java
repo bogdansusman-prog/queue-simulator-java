@@ -9,6 +9,8 @@ public class Main {
         SimulationFrame frame = new SimulationFrame();
 
         frame.addStartListener(() -> {
+            frame.setStartButtonEnabled(false);
+
             SimulationManager manager = new SimulationManager(
                     frame,
                     frame.getNumberOfServers(),
@@ -16,7 +18,10 @@ public class Main {
                     frame.getTimeLimit()
             );
 
-            Thread t = new Thread(manager);
+            Thread t = new Thread(() -> {
+                manager.run();
+                javax.swing.SwingUtilities.invokeLater(() -> frame.setStartButtonEnabled(true));
+            });
             t.start();
         });
     }

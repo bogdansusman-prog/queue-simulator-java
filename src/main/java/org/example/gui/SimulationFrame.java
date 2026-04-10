@@ -40,7 +40,7 @@ public class SimulationFrame extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
-
+        add(inputPanel, BorderLayout.NORTH);
         setVisible(true);
     }
 
@@ -63,5 +63,8 @@ public class SimulationFrame extends JFrame {
     }
     public void addStartListener(Runnable action){
         startButton.addActionListener(e -> action.run());
+    }
+    public void setStartButtonEnabled(boolean enabled) {
+        startButton.setEnabled(enabled);
     }
 }
