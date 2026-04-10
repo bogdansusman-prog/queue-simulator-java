@@ -9,11 +9,12 @@ public class Main {
         SimulationFrame frame = new SimulationFrame();
 
         frame.addStartListener(() -> {
-            SimulationManager manager = new SimulationManager(frame);
-
-            manager.numberOfClients = frame.getNumberOfClients();
-            manager.numberOfServers = frame.getNumberOfServers();
-            manager.timeLimit = frame.getTimeLimit();
+            SimulationManager manager = new SimulationManager(
+                    frame,
+                    frame.getNumberOfServers(),
+                    frame.getNumberOfClients(),
+                    frame.getTimeLimit()
+            );
 
             Thread t = new Thread(manager);
             t.start();

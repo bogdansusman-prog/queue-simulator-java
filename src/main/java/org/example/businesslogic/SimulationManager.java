@@ -26,8 +26,12 @@ public class SimulationManager implements Runnable {
     private int peakHour;
     private int peakClients;
 
-    public SimulationManager(SimulationFrame frame) {
+    public SimulationManager(SimulationFrame frame, int servers, int clients, int timeLimit) {
         this.frame = frame;
+        this.numberOfServers = servers;
+        this.numberOfClients = clients;
+        this.timeLimit = timeLimit;
+
         scheduler = new Scheduler(numberOfServers, numberOfClients);
         scheduler.changeStrategy(selectionPolicy);
 
@@ -111,7 +115,7 @@ public class SimulationManager implements Runnable {
     public void run() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("log.txt"))) {
             int currentTime = 0;
-            frame.setSimulationData("");
+            javax.swing.SwingUtilities.invokeLater(() -> frame.setSimulationData(""));
 
             while (currentTime <= timeLimit || !generatedTasks.isEmpty() || !scheduler.allQueuesEmpty()) {
                 scheduler.updateServerTimes(currentTime);
@@ -129,7 +133,7 @@ public class SimulationManager implements Runnable {
                 updatePeakHour(currentTime);
 
                 String state = formatState(currentTime);
-                frame.appendSimulationData(state);
+                javax.swing.SwingUtilities.invokeLater(() -> frame.appendSimulationData(state));
                 System.out.print(state);
 
                 writer.print(state);
@@ -154,7 +158,7 @@ public class SimulationManager implements Runnable {
                     + "Average service time: " + averageServiceTime + "\n"
                     + "Peak hour: " + peakHour + "\n";
 
-            frame.appendSimulationData("\n" + finalStats);
+            javax.swing.SwingUtilities.invokeLater(() -> frame.appendSimulationData("\n" + finalStats));
             System.out.println(finalStats);
             writer.println(finalStats);
 
@@ -163,9 +167,4 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    public static void main(String[] args) {
-        SimulationManager gen = new SimulationManager();
-        Thread t = new Thread(gen);
-        t.start();
-    }
 }
