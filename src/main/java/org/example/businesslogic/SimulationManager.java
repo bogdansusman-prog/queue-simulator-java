@@ -32,7 +32,7 @@ public class SimulationManager implements Runnable {
         this.numberOfClients = clients;
         this.timeLimit = timeLimit;
 
-        scheduler = new Scheduler(numberOfServers, numberOfClients);
+        scheduler = new Scheduler(numberOfServers);
         scheduler.changeStrategy(selectionPolicy);
 
         generatedTasks = new ArrayList<>();

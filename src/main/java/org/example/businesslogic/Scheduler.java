@@ -11,12 +11,10 @@ import java.util.List;
 public class Scheduler {
     private final List<Server> servers;
     private final int maxNoServers;
-    private final int maxTasksPerServer;
     private Strategy strategy;
 
-    public Scheduler(int maxNoServers, int maxTasksPerServer){
+    public Scheduler(int maxNoServers){
         this.maxNoServers = maxNoServers;
-        this.maxTasksPerServer = maxTasksPerServer;
         this.servers = new ArrayList<>();
 
         // for maxNoServers

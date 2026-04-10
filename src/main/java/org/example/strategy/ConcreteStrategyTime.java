@@ -9,7 +9,6 @@ import java.util.List;
 public class ConcreteStrategyTime implements Strategy {
     @Override
     public void addTask(List<Server> servers, Task t){
-        // TODO Auto-generated method stub
         if(servers == null || servers.isEmpty()){
             return;
         }
