@@ -5,24 +5,37 @@ import org.example.gui.SimulationFrame;
 
 public class Main {
     public static void main(String[] args) {
-
         SimulationFrame frame = new SimulationFrame();
 
         frame.addStartListener(() -> {
-            frame.setStartButtonEnabled(false);
+            try {
+                int numberOfServers = frame.getNumberOfServers();
+                int numberOfClients = frame.getNumberOfClients();
+                int timeLimit = frame.getTimeLimit();
 
-            SimulationManager manager = new SimulationManager(
-                    frame,
-                    frame.getNumberOfServers(),
-                    frame.getNumberOfClients(),
-                    frame.getTimeLimit()
-            );
+                if (numberOfServers <= 0 || numberOfClients <= 0 || timeLimit <= 0) {
+                    frame.showErrorMessage("All values must be positive integers greater than 0.");
+                    return;
+                }
 
-            Thread t = new Thread(() -> {
-                manager.run();
-                javax.swing.SwingUtilities.invokeLater(() -> frame.setStartButtonEnabled(true));
-            });
-            t.start();
+                frame.setStartButtonEnabled(false);
+
+                SimulationManager manager = new SimulationManager(
+                        frame,
+                        numberOfServers,
+                        numberOfClients,
+                        timeLimit
+                );
+
+                Thread t = new Thread(() -> {
+                    manager.run();
+                    javax.swing.SwingUtilities.invokeLater(() -> frame.setStartButtonEnabled(true));
+                });
+                t.start();
+
+            } catch (NumberFormatException e) {
+                frame.showErrorMessage("Please enter only integer numbers.");
+            }
         });
     }
 }

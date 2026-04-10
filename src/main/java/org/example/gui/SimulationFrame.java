@@ -51,20 +51,23 @@ public class SimulationFrame extends JFrame {
         textArea.append(data);
     }
     public int getNumberOfClients() {
-        return Integer.parseInt(tfClients.getText());
+        return Integer.parseInt(tfClients.getText().trim());
     }
 
     public int getNumberOfServers() {
-        return Integer.parseInt(tfServers.getText());
+        return Integer.parseInt(tfServers.getText().trim());
     }
 
     public int getTimeLimit() {
-        return Integer.parseInt(tfTimeLimit.getText());
+        return Integer.parseInt(tfTimeLimit.getText().trim());
     }
     public void addStartListener(Runnable action){
         startButton.addActionListener(e -> action.run());
     }
     public void setStartButtonEnabled(boolean enabled) {
         startButton.setEnabled(enabled);
+    }
+    public void showErrorMessage(String message){
+        JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
     }
 }
