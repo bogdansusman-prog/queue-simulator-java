@@ -26,11 +26,24 @@ public class SimulationManager implements Runnable {
     private int peakHour;
     private int peakClients;
 
-    public SimulationManager(SimulationFrame frame, int servers, int clients, int timeLimit) {
+    public SimulationManager(SimulationFrame frame,
+                             int servers,
+                             int clients,
+                             int timeLimit,
+                             int minArrivalTime,
+                             int maxArrivalTime,
+                             int minProcessingTime,
+                             int maxProcessingTime,
+                             SelectionPolicy selectionPolicy) {
         this.frame = frame;
         this.numberOfServers = servers;
         this.numberOfClients = clients;
         this.timeLimit = timeLimit;
+        this.minArrivalTime = minArrivalTime;
+        this.maxArrivalTime = maxArrivalTime;
+        this.minProcessingTime = minProcessingTime;
+        this.maxProcessingTime = maxProcessingTime;
+        this.selectionPolicy = selectionPolicy;
 
         scheduler = new Scheduler(numberOfServers);
         scheduler.changeStrategy(selectionPolicy);
@@ -117,11 +130,10 @@ public class SimulationManager implements Runnable {
             int currentTime = 0;
             javax.swing.SwingUtilities.invokeLater(() -> frame.setSimulationData(""));
 
-            while (currentTime <= timeLimit || !generatedTasks.isEmpty() || !scheduler.allQueuesEmpty()) {
+            while (currentTime <= timeLimit) {
                 scheduler.updateServerTimes(currentTime);
 
                 Iterator<Task> iterator = generatedTasks.iterator();
-
                 while (iterator.hasNext()) {
                     Task task = iterator.next();
                     if (task.getArrivalTime() <= currentTime) {
@@ -138,6 +150,10 @@ public class SimulationManager implements Runnable {
 
                 writer.print(state);
                 writer.flush();
+
+                if (generatedTasks.isEmpty() && scheduler.allQueuesEmpty()) {
+                    break;
+                }
 
                 currentTime++;
 
