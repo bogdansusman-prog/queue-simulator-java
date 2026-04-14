@@ -29,11 +29,24 @@ public class Server implements Runnable {
     }
 
     public boolean isEmpty(){
-        return tasks.isEmpty();
+        return tasks.isEmpty() && currentTask == null;
     }
 
-    public Task[] getTasks(){
-        return tasks.toArray(new Task[0]);
+    public Task[] getTasks() {
+        int extra = (currentTask != null) ? 1 : 0;
+        Task[] queueTasks = tasks.toArray(new Task[0]);
+        Task[] result = new Task[queueTasks.length + extra];
+
+        int index = 0;
+        if (currentTask != null) {
+            result[index++] = currentTask;
+        }
+
+        for (Task task : queueTasks) {
+            result[index++] = task;
+        }
+
+        return result;
     }
 
     public BlockingQueue<Task> getQueue(){
@@ -88,14 +101,21 @@ public class Server implements Runnable {
     }
 
     @Override
-    public String toString(){
-        if(tasks.isEmpty()){
-            return "closed";
-        }
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Task task : tasks){
+
+        if (currentTask != null) {
+            sb.append(currentTask).append(" ");
+        }
+
+        for (Task task : tasks) {
             sb.append(task).append(" ");
         }
+
+        if (sb.length() == 0) {
+            return "closed";
+        }
+
         return sb.toString().trim();
     }
 }
