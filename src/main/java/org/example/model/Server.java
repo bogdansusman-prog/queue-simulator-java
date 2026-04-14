@@ -2,6 +2,7 @@ package org.example.model;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server implements Runnable {
@@ -9,6 +10,7 @@ public class Server implements Runnable {
     private final AtomicInteger waitingPeriod;
     private volatile boolean running;
     private volatile int currentTime;
+    private Task currentTask;
 
     public Server(){
         // initialize queue and waiting period
@@ -16,6 +18,7 @@ public class Server implements Runnable {
         waitingPeriod = new AtomicInteger(0);
         currentTime = 0;
         running = true;
+        this.currentTask = null;
     }
 
     public void addTask(Task newTask){
@@ -58,28 +61,26 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
-        while (running || !tasks.isEmpty()) {
+        while (running || !tasks.isEmpty() || currentTask != null) {
             try {
-                //take next task from queue
-                Task currentTask = tasks.peek();
-                if (currentTask != null) {
-                    if (currentTask.getStartTime() == -1) {
+                if (currentTask == null) {
+                    currentTask = tasks.poll(1, TimeUnit.SECONDS);
+
+                    if (currentTask != null) {
                         currentTask.setStartTime(currentTime);
                     }
-                    //stop thread for a time equal with the tasks prcessing time
-                    Thread.sleep(1000);
+                }
 
+                if (currentTask != null) {
+                    Thread.sleep(1000);
                     currentTask.decreaseRemainingServiceTime();
-                    //decrement the watingPeriod
-                    waitingPeriod.decrementAndGet();
 
                     if (currentTask.isFinished()) {
-                        tasks.take();
+                        waitingPeriod.addAndGet(-currentTask.getServiceTime());
+                        currentTask = null;
                     }
-                } else{
-                    Thread.sleep(100);
                 }
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
             }
