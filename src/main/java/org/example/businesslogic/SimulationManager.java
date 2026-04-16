@@ -74,7 +74,7 @@ public class SimulationManager implements Runnable {
 
     private String formatState(int currentTime) {
         StringBuilder result = new StringBuilder();
-
+//folosesc append pentru ca sa nu tot creez un obiect nou si sa eficientizez lucrurile(adauga la fina = append)
         result.append("Time ").append(currentTime).append("\n");
         result.append("Waiting clients: ");
 
@@ -126,31 +126,42 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
+        //deschid fisierul log.txt pentru scrierea terminalului
         try (PrintWriter writer = new PrintWriter(new FileWriter("log.txt"))) {
             int currentTime = 0;
+            //curat zona de afisare din interfata gui
             javax.swing.SwingUtilities.invokeLater(() -> frame.setSimulationData(""));
 
             while (currentTime <= timeLimit) {
+                //actualizez timpul ramas pentru procese
                 scheduler.updateServerTimes(currentTime);
 
+                //folosesc iterator ca sa pot sterge din lista fara sa puste
+                //sincronizez cu iteratorul intern
                 Iterator<Task> iterator = generatedTasks.iterator();
                 while (iterator.hasNext()) {
                     Task task = iterator.next();
                     if (task.getArrivalTime() <= currentTime) {
                         scheduler.dispatchTask(task);
                         iterator.remove();
+                        //daca foloseaza list.remove in bucla pusca
                     }
                 }
 
                 updatePeakHour(currentTime);
 
+                //formatez starea curenta
                 String state = formatState(currentTime);
+
+                //afisez in gui
                 javax.swing.SwingUtilities.invokeLater(() -> frame.appendSimulationData(state));
                 System.out.print(state);
 
+                //scriu in fisier
                 writer.print(state);
                 writer.flush();
 
+                //daca nu mai sunt taskurti ceau
                 if (generatedTasks.isEmpty() && scheduler.allQueuesEmpty()) {
                     break;
                 }
@@ -167,6 +178,8 @@ public class SimulationManager implements Runnable {
 
             scheduler.stopAllServers();
 
+
+            //calculez  timpul mediu
             double averageWaitingTime = computeAverageWaitingTime();
 
             String finalStats = "Simulation finished.\n"
@@ -174,11 +187,17 @@ public class SimulationManager implements Runnable {
                     + "Average service time: " + averageServiceTime + "\n"
                     + "Peak hour: " + peakHour + "\n";
 
+
+            //afisez in gui
+
             javax.swing.SwingUtilities.invokeLater(() -> frame.appendSimulationData("\n" + finalStats));
+            //afisez in consola in acelasi timp
             System.out.println(finalStats);
+            //scriu rezultatele finale in fisier
             writer.println(finalStats);
 
         } catch (IOException e) {
+            //tratare eroare la lucrul cu fisier
             e.printStackTrace();
         }
     }

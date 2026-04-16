@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
+    // List of servers (queues) managed by the scheduler
     private final List<Server> servers;
+    //Maximum numbers of servers allowed
     private final int maxNoServers;
+    //Strayegy user for task dispatching
     private Strategy strategy;
 
     public Scheduler(int maxNoServers){
