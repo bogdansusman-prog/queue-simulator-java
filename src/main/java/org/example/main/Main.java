@@ -12,9 +12,11 @@ public class Main{
                 return;
             }
 
+            //pregatesc guiul
             frame.setStartButtonEnabled(false);
             frame.setSimulationData("");
 
+            //motor simulare(consy
             SimulationManager manager = new SimulationManager(
                     frame,
                     frame.getNumberOfServers(),
@@ -26,11 +28,13 @@ public class Main{
                     frame.getMaxServiceTime(),
                     frame.getSelectionPolicy()
             );
+            //pornesc simularea pe alt thread
             Thread t = new Thread(() -> {
                 manager.run();
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     frame.setStartButtonEnabled(true);
                 });
+                //reactivez butonul
             });
             t.start();
         });

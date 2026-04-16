@@ -6,10 +6,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server implements Runnable {
-    private final BlockingQueue<Task> tasks;
+    //coada sigura + sincronizare automata
+    private final BlockingQueue<Task> tasks;//existenta mai multor threaduri...
+    //e thread-safe
+    //permite simulationmanager-> adaga taskuri
+    //permit server -> consume taskuri
     private final AtomicInteger waitingPeriod;
+    //exista mai multe threaduri care citesc si modifica
+    //operatia e indivizibila
     private volatile boolean running;
     private volatile int currentTime;
+    //valoarea e mereu citita din memorie nu din thread
+    //daca foloseam altceva nu vedeam niciodata o schimbare
     private Task currentTask;
 
     public Server(){
@@ -34,14 +42,20 @@ public class Server implements Runnable {
 
     public Task[] getTasks() {
         int extra = (currentTask != null) ? 1 : 0;
+        //verificam task in exectie
         Task[] queueTasks = tasks.toArray(new Task[0]);
+        //iau taskurile din cooada (tranform in array din blocking queue)
         Task[] result = new Task[queueTasks.length + extra];
+        //creez arrayul final
 
+
+        //pun currenttask primul(e in lucru)
         int index = 0;
         if (currentTask != null) {
+
             result[index++] = currentTask;
         }
-
+//adaug restul taskurilor
         for (Task task : queueTasks) {
             result[index++] = task;
         }
@@ -78,6 +92,7 @@ public class Server implements Runnable {
             try {
                 if (currentTask == null) {
                     currentTask = tasks.poll(1, TimeUnit.SECONDS);
+                    //sincronizez accesul automat
 
                     if (currentTask != null) {
                         currentTask.setStartTime(currentTime);
@@ -89,7 +104,7 @@ public class Server implements Runnable {
                     currentTask.decreaseRemainingServiceTime();
 
                     if (currentTask.isFinished()) {
-                        waitingPeriod.addAndGet(-currentTask.getServiceTime());
+                        waitingPeriod.addAndGet(-currentTask.getServiceTime());//il scot din timpul total de asteptare
                         currentTask = null;
                     }
                 }
