@@ -29,6 +29,9 @@ public class SimulationFrame extends JFrame {
     private JPanel bottomPanel;
     private JPanel centerPanel;
     private JTextArea textAreaLog;
+    private JTextPane textPaneStats;
+
+    private QueueAnimationPanel animationPanel;
 
 
     public SimulationFrame() {
@@ -39,6 +42,10 @@ public class SimulationFrame extends JFrame {
         setLocationRelativeTo(null);
 
         configureComponents();
+
+        animationPanel = new QueueAnimationPanel();
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.add(animationPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -65,6 +72,10 @@ public class SimulationFrame extends JFrame {
         textAreaLog.setLineWrap(false);
 
         btnClear.addActionListener(e -> textAreaLog.setText(""));
+
+        textPaneStats.setEditable(false);
+        textPaneStats.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+        textPaneStats.setText("Statistics will appear here...");
     }
 
     public int getNumberOfClients(){
@@ -148,7 +159,25 @@ public class SimulationFrame extends JFrame {
         textAreaLog.append(data);
     }
 
+    public void updateAnimation(java.util.List<org.example.model.Task> shoppingClients,
+                                java.util.List<org.example.model.Server> servers,
+                                int currentTime) {
+        animationPanel.updateState(shoppingClients, servers, currentTime);
+    }
+
     public void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void setStatistics(double avgWaiting, double avgService, int peakHour) {
+        String stats = String.format(
+                "Simulation finished\n\n" +
+                        "Average waiting time : %.2f\n" +
+                        "Average service time : %.2f\n" +
+                        "Peak hour           : %d",
+                avgWaiting, avgService, peakHour
+        );
+
+        textPaneStats.setText(stats);
     }
 }

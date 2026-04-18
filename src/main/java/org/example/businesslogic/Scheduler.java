@@ -7,6 +7,8 @@ import org.example.strategy.ConcreteStrategyTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Scheduler {
     // List of servers (queues) managed by the scheduler
@@ -15,25 +17,29 @@ public class Scheduler {
     private final int maxNoServers;
     //Strayegy user for task dispatching
     private Strategy strategy;
+    private final ExecutorService serverPool;
 
     public Scheduler(int maxNoServers){
         this.maxNoServers = maxNoServers;
         this.servers = new ArrayList<>();
+        this.serverPool = Executors.newFixedThreadPool(maxNoServers);
 
         // for maxNoServers
         for(int i = 0; i < maxNoServers; i++){
             //-create server object
             Server server = new Server();
             servers.add(server);
+            serverPool.execute(server);
 
             // - create thread with the object
-            Thread t = new Thread(server);
-            t.start();
+//            Thread t = new Thread(server);
+//            t.start();
+            // thread pool =>
         }
     }
 
     public void changeStrategy(SelectionPolicy policy){
-        // apply stratey pattern in order to instantiate the strategy
+        // apply strategy pattern in order to instantiate the strategy
         //with the concrete strategy corresponding to policy
         if(policy == SelectionPolicy.SHORTEST_QUEUE){
             strategy = new ConcreteStrategyQueue();
@@ -66,7 +72,7 @@ public class Scheduler {
     public int getTotalClientsInQueues(){
         int total = 0;
         for(Server server : servers){
-            total += server.getQueueSize();
+            total += server.getTotalClientsCount();
         }
         return total;
     }
@@ -75,6 +81,7 @@ public class Scheduler {
         for(Server server : servers){
             server.stopServer();
         }
+        serverPool.shutdown();
     }
 
     public void updateServerTimes(int currentTime) {

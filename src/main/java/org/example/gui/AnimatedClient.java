@@ -8,15 +8,19 @@ public class AnimatedClient {
     private int targetY;
     private int remainingTime;
     private boolean exiting;
+    private int exitY;
+    private boolean exitYOffsetApplied;
 
-    public AnimatedClient(int taskId, int x, int y, int targetX, int targetY, int remainingTime, boolean exiting) {
+    public AnimatedClient(int taskId, int x, int y, int remainingTime) {
         this.taskId = taskId;
         this.x = x;
         this.y = y;
-        this.targetX = targetX;
-        this.targetY = targetY;
+        this.targetX = x;
+        this.targetY = y;
         this.remainingTime = remainingTime;
-        this.exiting = exiting;
+        this.exiting = false;
+        this.exitY = y;
+        this.exitYOffsetApplied = false;
     }
 
     public int getTaskId() {
@@ -56,17 +60,34 @@ public class AnimatedClient {
         return x > width + 80;
     }
 
-    public void update(){
+    public void update() {
         int speed = 8;
 
-        if(x < targetX) x = Math.min(x + speed, targetX);
-        else if(x > targetX) x = Math.max(x - speed, targetX);
+        if (!exiting) {
+            if (x < targetX) x = Math.min(x + speed, targetX);
+            else if (x > targetX) x = Math.max(x - speed, targetX);
 
-        if(y < targetY) y = Math.min(y + speed, targetY);
-        else if(y > targetY) y = Math.max(y - speed, targetY);
+            if (y < targetY) y = Math.min(y + speed, targetY);
+            else if (y > targetY) y = Math.max(y - speed, targetY);
+        } else {
+            // mai intai coboara putin
+            if (y < exitY) {
+                y = Math.min(y + 2, exitY);
+            } else if (y > exitY) {
+                y = Math.max(y - 2, exitY);
+            }
 
-        if(exiting){
-            x+=speed;
+            // apoi merge in dreapta
+            x += 6+speed;
+        }
+    }
+
+    public void startExiting(){
+        this.exiting = true;
+
+         if(!exitYOffsetApplied){
+            this.exitY = this.y + 12;
+            exitYOffsetApplied = true;
         }
     }
 }

@@ -3,40 +3,53 @@ package org.example.main;
 import org.example.businesslogic.SimulationManager;
 import org.example.gui.SimulationFrame;
 
-public class Main{
-    public static void main(String[] args){
-        SimulationFrame frame = new SimulationFrame();
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-        frame.addStartListener(() ->{
-            if(!frame.validateInput()){
-                return;
-            }
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            SimulationFrame frame = new SimulationFrame();
+            ExecutorService pool = Executors.newFixedThreadPool(1);
 
-            //pregatesc guiul
-            frame.setStartButtonEnabled(false);
-            frame.setSimulationData("");
+            frame.addStartListener(() -> {
+                if (!frame.validateInput()) {
+                    return;
+                }
 
-            //motor simulare(consy
-            SimulationManager manager = new SimulationManager(
-                    frame,
-                    frame.getNumberOfServers(),
-                    frame.getNumberOfClients(),
-                    frame.getTimeLimit(),
-                    frame.getMinArrivalTime(),
-                    frame.getMaxArrivalTime(),
-                    frame.getMinServiceTime(),
-                    frame.getMaxServiceTime(),
-                    frame.getSelectionPolicy()
-            );
-            //pornesc simularea pe alt thread
-            Thread t = new Thread(() -> {
-                manager.run();
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    frame.setStartButtonEnabled(true);
+                frame.setStartButtonEnabled(false);
+                frame.setSimulationData("");
+
+                SimulationManager manager = new SimulationManager(
+                        frame,
+                        frame.getNumberOfServers(),
+                        frame.getNumberOfClients(),
+                        frame.getTimeLimit(),
+                        frame.getMinArrivalTime(),
+                        frame.getMaxArrivalTime(),
+                        frame.getMinServiceTime(),
+                        frame.getMaxServiceTime(),
+                        frame.getSelectionPolicy()
+                );
+
+                pool.execute(() -> {
+                    try {
+                        manager.run();
+                    } finally {
+                        SwingUtilities.invokeLater(() -> frame.setStartButtonEnabled(true));
+                    }
                 });
-                //reactivez butonul
             });
-            t.start();
+
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    pool.shutdown();
+                }
+            });
         });
     }
 }

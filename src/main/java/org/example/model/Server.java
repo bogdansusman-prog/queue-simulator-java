@@ -133,4 +133,8 @@ public class Server implements Runnable {
 
         return sb.toString().trim();
     }
+
+    public int getTotalClientsCount() {
+        return tasks.size() + (currentTask != null ? 1 : 0);
+    }
 }
