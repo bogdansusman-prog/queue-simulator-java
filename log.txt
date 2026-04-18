@@ -1,139 +1,129 @@
 Time 0
-Waiting clients: (4, 5, 4) (3, 6, 4) (2, 19, 4) (1, 24, 3) 
+Waiting clients: (2, 3, 4) (4, 10, 4) (1, 13, 4) (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 1
-Waiting clients: (4, 5, 4) (3, 6, 4) (2, 19, 4) (1, 24, 3) 
+Waiting clients: (2, 3, 4) (4, 10, 4) (1, 13, 4) (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 2
-Waiting clients: (4, 5, 4) (3, 6, 4) (2, 19, 4) (1, 24, 3) 
+Waiting clients: (2, 3, 4) (4, 10, 4) (1, 13, 4) (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 3
-Waiting clients: (4, 5, 4) (3, 6, 4) (2, 19, 4) (1, 24, 3) 
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 4
-Waiting clients: (4, 5, 4) (3, 6, 4) (2, 19, 4) (1, 24, 3) 
-Queue 1: closed
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: (2, 3, 3)
 Queue 2: closed
 
 Time 5
-Waiting clients: (3, 6, 4) (2, 19, 4) (1, 24, 3) 
-Queue 1: (4, 5, 4)
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: (2, 3, 2)
 Queue 2: closed
 
 Time 6
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: (4, 5, 3)
-Queue 2: (3, 6, 4)
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: (2, 3, 1)
+Queue 2: closed
 
 Time 7
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: (4, 5, 3)
-Queue 2: (3, 6, 4)
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: closed
+Queue 2: closed
 
 Time 8
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: (4, 5, 1)
-Queue 2: (3, 6, 2)
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: closed
+Queue 2: closed
 
 Time 9
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: (4, 5, 1)
-Queue 2: (3, 6, 1)
+Waiting clients: (4, 10, 4) (1, 13, 4) (3, 22, 3) 
+Queue 1: closed
+Queue 2: closed
 
 Time 10
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: closed
+Waiting clients: (1, 13, 4) (3, 22, 3) 
+Queue 1: (4, 10, 4)
 Queue 2: closed
 
 Time 11
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: closed
+Waiting clients: (1, 13, 4) (3, 22, 3) 
+Queue 1: (4, 10, 3)
 Queue 2: closed
 
 Time 12
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: closed
+Waiting clients: (1, 13, 4) (3, 22, 3) 
+Queue 1: (4, 10, 2)
 Queue 2: closed
 
 Time 13
-Waiting clients: (2, 19, 4) (1, 24, 3) 
-Queue 1: closed
-Queue 2: closed
+Waiting clients: (3, 22, 3) 
+Queue 1: (4, 10, 1)
+Queue 2: (1, 13, 4)
 
 Time 14
-Waiting clients: (2, 19, 4) (1, 24, 3) 
+Waiting clients: (3, 22, 3) 
 Queue 1: closed
-Queue 2: closed
+Queue 2: (1, 13, 3)
 
 Time 15
-Waiting clients: (2, 19, 4) (1, 24, 3) 
+Waiting clients: (3, 22, 3) 
 Queue 1: closed
-Queue 2: closed
+Queue 2: (1, 13, 2)
 
 Time 16
-Waiting clients: (2, 19, 4) (1, 24, 3) 
+Waiting clients: (3, 22, 3) 
 Queue 1: closed
-Queue 2: closed
+Queue 2: (1, 13, 1)
 
 Time 17
-Waiting clients: (2, 19, 4) (1, 24, 3) 
+Waiting clients: (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 18
-Waiting clients: (2, 19, 4) (1, 24, 3) 
+Waiting clients: (3, 22, 3) 
 Queue 1: closed
 Queue 2: closed
 
 Time 19
-Waiting clients: (1, 24, 3) 
-Queue 1: (2, 19, 4)
+Waiting clients: (3, 22, 3) 
+Queue 1: closed
 Queue 2: closed
 
 Time 20
-Waiting clients: (1, 24, 3) 
-Queue 1: (2, 19, 3)
+Waiting clients: (3, 22, 3) 
+Queue 1: closed
 Queue 2: closed
 
 Time 21
-Waiting clients: (1, 24, 3) 
-Queue 1: (2, 19, 2)
+Waiting clients: (3, 22, 3) 
+Queue 1: closed
 Queue 2: closed
 
 Time 22
-Waiting clients: (1, 24, 3) 
-Queue 1: (2, 19, 1)
+Waiting clients: none
+Queue 1: (3, 22, 3)
 Queue 2: closed
 
 Time 23
-Waiting clients: (1, 24, 3) 
-Queue 1: closed
+Waiting clients: none
+Queue 1: (3, 22, 2)
 Queue 2: closed
 
 Time 24
 Waiting clients: none
-Queue 1: (1, 24, 3)
+Queue 1: (3, 22, 1)
 Queue 2: closed
 
 Time 25
-Waiting clients: none
-Queue 1: (1, 24, 2)
-Queue 2: closed
-
-Time 26
-Waiting clients: none
-Queue 1: (1, 24, 1)
-Queue 2: closed
-
-Time 27
 Waiting clients: none
 Queue 1: closed
 Queue 2: closed
@@ -141,5 +131,5 @@ Queue 2: closed
 Simulation finished.
 Average waiting time: 0.0
 Average service time: 3.75
-Peak hour: 6
+Peak hour: 13
 

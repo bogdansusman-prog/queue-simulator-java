@@ -31,7 +31,7 @@
         <mxCell id="EifpnS0NO7Ylhp6Ibq88-14" parent="1" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=default;" value="gui" vertex="1">
           <mxGeometry height="120" width="150" x="-325" y="88" as="geometry" />
         </mxCell>
-        <mxCell id="EifpnS0NO7Ylhp6Ibq88-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="SimulationFrameCopy&lt;div&gt;SimulationFrame&lt;/div&gt;" vertex="1">
+        <mxCell id="EifpnS0NO7Ylhp6Ibq88-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="SimulationFrameCopy&lt;div&gt;SimulationFrame&lt;/div&gt;&lt;div&gt;QueueAnimationPanel&lt;/div&gt;&lt;div&gt;AnimatedClient&lt;/div&gt;" vertex="1">
           <mxGeometry height="90" width="150" x="-325" y="168" as="geometry" />
         </mxCell>
         <mxCell id="EifpnS0NO7Ylhp6Ibq88-16" edge="1" parent="1" source="EifpnS0NO7Ylhp6Ibq88-13" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;fontSize=12;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" target="EifpnS0NO7Ylhp6Ibq88-15" value="">
