@@ -25,10 +25,23 @@ public class QueueAnimationPanel extends JPanel {
         timer.start();
     }
 
+    private void updatePreferredSize() {
+        int topAreaHeight = 170;
+        int laneGap = 85;
+        int bottomMargin = 40;
+
+        int height = topAreaHeight + servers.size() * laneGap + bottomMargin;
+
+        setPreferredSize(new Dimension(850, Math.max(360, height)));
+        revalidate();
+    }
+
     public void updateState(List<Task> shoppingClients, List<Server> servers, int currentTime) {
         this.shoppingClients = new ArrayList<>(shoppingClients);
         this.servers = new ArrayList<>(servers);
         this.currentTime = currentTime;
+
+        updatePreferredSize();
 
         Set<Integer> visibleIds = new HashSet<>();
 

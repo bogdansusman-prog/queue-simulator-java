@@ -44,8 +44,9 @@ public class SimulationFrame extends JFrame {
         configureComponents();
 
         animationPanel = new QueueAnimationPanel();
+        JScrollPane animationScrollPane = new JScrollPane(animationPanel);
         centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(animationPanel, BorderLayout.CENTER);
+        centerPanel.add(animationScrollPane, BorderLayout.CENTER);
 
         setVisible(true);
     }
