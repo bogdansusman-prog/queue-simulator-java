@@ -1,14 +1,20 @@
 package org.example.gui;
 
 public class AnimatedClient {
+    //id ul taskului clientului animat
     private final int taskId;
+    //coordonatele curente ale clientului
     private int x;
     private int y;
+    //pozitia spre care se indreapta clientul
     private int targetX;
     private int targetY;
     private int remainingTime;
+    //indica daca clientul pleaca
     private boolean exiting;
+    // coordonata finala pe axa Y pentru efectul de iesire
     private int exitY;
+    // previne aplicarea de mai multe ori a offset-ului de iesire
     private boolean exitYOffsetApplied;
 
     public AnimatedClient(int taskId, int x, int y, int remainingTime) {
@@ -44,6 +50,7 @@ public class AnimatedClient {
     }
 
     public void setTarget(int targetX, int targetY) {
+        // actualizeaza noua pozitie tinta a clientului
         this.targetX = targetX;
         this.targetY = targetY;
     }
@@ -56,6 +63,7 @@ public class AnimatedClient {
         return exiting;
     }
 
+    // verifica daca clientul a iesit complet din zona vizibila
     public boolean isOutsideScreen(int width){
         return x > width + 80;
     }
@@ -64,6 +72,7 @@ public class AnimatedClient {
         int speed = 8;
 
         if (!exiting) {
+            // deplasare normala catre pozitia tinta
             if (x < targetX) x = Math.min(x + speed, targetX);
             else if (x > targetX) x = Math.max(x - speed, targetX);
 
@@ -83,6 +92,8 @@ public class AnimatedClient {
     }
 
     public void startExiting(){
+        // marcheaza clientul ca iesit si
+        // aplica o singura data offset-ul pe verticala
         this.exiting = true;
 
          if(!exitYOffsetApplied){

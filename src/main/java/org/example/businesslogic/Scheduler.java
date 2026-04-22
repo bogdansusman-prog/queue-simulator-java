@@ -17,6 +17,7 @@ public class Scheduler {
     private final int maxNoServers;
     //Strayegy user for task dispatching
     private Strategy strategy;
+    //pool de thread-uri in care ruleaza serverele in paralel
     private final ExecutorService serverPool;
 
     public Scheduler(int maxNoServers){
@@ -24,7 +25,7 @@ public class Scheduler {
         this.servers = new ArrayList<>();
         this.serverPool = Executors.newFixedThreadPool(maxNoServers);
 
-        // for maxNoServers
+        // creeaza serverele si le porneste in executor
         for(int i = 0; i < maxNoServers; i++){
             //-create server object
             Server server = new Server();
@@ -71,6 +72,7 @@ public class Scheduler {
 
     public int getTotalClientsInQueues(){
         int total = 0;
+        //include si clientul aflat in servire
         for(Server server : servers){
             total += server.getTotalClientsCount();
         }
@@ -85,6 +87,7 @@ public class Scheduler {
     }
 
     public void updateServerTimes(int currentTime) {
+        // transmite timpul curent catre fiecare server
         for(Server server : servers){
             server.setCurrentTime(currentTime);
         }

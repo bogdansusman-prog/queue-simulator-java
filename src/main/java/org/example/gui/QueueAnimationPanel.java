@@ -9,8 +9,11 @@ import java.util.*;
 import java.util.List;
 
 public class QueueAnimationPanel extends JPanel {
+    //mapa cu toti clientii animati
     private final Map<Integer, AnimatedClient> animatedClients = new HashMap<>();
+    //clientii care inca nu au intrat in cozi
     private List<Task> shoppingClients = new ArrayList<>();
+    //lista de servere (cozi) din simulare
     private List<Server> servers = new ArrayList<>();
     private int currentTime = 0;
 
@@ -18,6 +21,7 @@ public class QueueAnimationPanel extends JPanel {
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(850, 360));
 
+        //timer ul reimprospateaza animatia periodic
         javax.swing.Timer timer = new javax.swing.Timer(40, e -> {
             updateAnimation();
             repaint();
@@ -26,6 +30,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void updatePreferredSize() {
+        // adapteaza inaltimea panoului in functie de numarul de cozi
         int topAreaHeight = 170;
         int laneGap = 85;
         int bottomMargin = 40;
@@ -37,12 +42,14 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     public void updateState(List<Task> shoppingClients, List<Server> servers, int currentTime) {
+        // actualizeaza starea vizuala folosind datele primite din simulare
         this.shoppingClients = new ArrayList<>(shoppingClients);
         this.servers = new ArrayList<>(servers);
         this.currentTime = currentTime;
 
         updatePreferredSize();
 
+        //retine clientii care trebuie sa ramana vizibili in frame
         Set<Integer> visibleIds = new HashSet<>();
 
         // zona de sus: clienti care inca nu au ajuns la case
@@ -54,17 +61,19 @@ public class QueueAnimationPanel extends JPanel {
             Task t = shoppingClients.get(i);
             visibleIds.add(t.getId());
 
+            //creeaza clientul amimat daca nu e deja
             AnimatedClient client = animatedClients.computeIfAbsent(
                     t.getId(),
                     id -> new AnimatedClient(id, 20, shoppingY, t.getRemainingServiceTime())
             );
 
+            //actualizez timpul ramas
             client.setRemainingTime(t.getRemainingServiceTime());
             client.setTarget(shoppingStartX + i * shoppingSpacing, shoppingY);
             client.setExiting(false);
         }
 
-        // cozile
+        // zona pentru cozi
         int servingX = 140;
         int queueStartX = 220;
         int queueTopY = 180;
@@ -79,12 +88,14 @@ public class QueueAnimationPanel extends JPanel {
                 Task t = queueTasks[j];
                 visibleIds.add(t.getId());
 
+                //creeaza clientul animat daca nu exista deja
                 AnimatedClient client = animatedClients.computeIfAbsent(
                         t.getId(),
                         id -> new AnimatedClient(id, 20, 20, t.getRemainingServiceTime())
                 );
 
                 client.setRemainingTime(t.getRemainingServiceTime());
+                // primul client este cel servit, restul sunt aliniati in coada
                 int x = (j == 0) ? servingX : queueStartX + (j - 1) * queueSpacing;
 
                 client.setTarget(x, y);
@@ -102,6 +113,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void updateAnimation() {
+        // actualizeaza pozitia fiecarui client si elimina clientii iesiti complet
         Iterator<Map.Entry<Integer, AnimatedClient>> iterator = animatedClients.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -117,6 +129,7 @@ public class QueueAnimationPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        //deseneaza elementele tabloului
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
@@ -130,6 +143,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void drawHeader(Graphics2D g2) {
+        //afiseaza timpul curent al simularii
         g2.setColor(Color.BLACK);
         g2.drawString("Time: " + currentTime, 20, 25);
     }
@@ -151,6 +165,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void drawQueues(Graphics2D g2) {
+        // deseneaza fiecare casa de marcat si linia cozii
         int cashierX = 45;
         int cashierYStart = 175;
         int laneGap = 85;
@@ -167,6 +182,7 @@ public class QueueAnimationPanel extends JPanel {
             g2.setColor(Color.LIGHT_GRAY);
             g2.drawLine(135, y + 20, getWidth() - 30, y + 20);
 
+            // afiseaza "closed" doar cand nu mai exista clienti nicaieri
             if (noClientsLeftAnywhere()) {
                 g2.setColor(Color.GRAY);
                 g2.drawString("closed", 170, y + 24);
@@ -175,6 +191,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void drawClients(Graphics2D g2) {
+        // separa clientii din zona de shopping de cei din cozi
         Set<Integer> shoppingIds = new HashSet<>();
         for(Task task : shoppingClients){
             shoppingIds.add(task.getId());
@@ -182,7 +199,7 @@ public class QueueAnimationPanel extends JPanel {
 
         Shape oldClip = g2.getClip();
 
-        //zona shopping
+        // clientii din zona de sus sunt desenati doar in interiorul dreptunghiului
         g2.setClip(20, 60, getWidth() - 40, 80);
 
         for (AnimatedClient client : animatedClients.values()) {
@@ -202,6 +219,7 @@ public class QueueAnimationPanel extends JPanel {
     }
 
     private void drawClient(Graphics2D g2, AnimatedClient client) {
+        // deseneaza un client individual si timpul ramas de servire
         int x = client.getX();
         int y = client.getY();
         int size = 34;
@@ -219,6 +237,7 @@ public class QueueAnimationPanel extends JPanel {
 
         g2.drawString("C" + client.getTaskId(), x + 5, y + 20);
         g2.drawString(String.valueOf(client.getRemainingTime()), x + 10, y - 5);
+        //afisez leaving daca clientul pleaca
         if (client.isExiting()) {
             g2.setColor(Color.GRAY);
             g2.drawString("leaving", x - 2, y + 50);

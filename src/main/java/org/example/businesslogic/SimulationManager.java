@@ -17,11 +17,16 @@ public class SimulationManager implements Runnable {
     public int maxArrivalTime = 30;
     public SelectionPolicy selectionPolicy = SelectionPolicy.SHORTEST_TIME;
 
+    //componenta care gestioneaza cozile si serverele
     private final Scheduler scheduler;
+    //referinta catre interfata grafica
     private final SimulationFrame frame;
+    //taskurile care nu ajuns inca in sistem
     private final List<Task> generatedTasks;
+    //totate taskurile generate, folosite pentru statistici finale
     private final List<Task> allTasks;
 
+    //stats pentru simulare
     private double averageServiceTime;
     private int peakHour;
     private int peakClients;
@@ -45,6 +50,7 @@ public class SimulationManager implements Runnable {
         this.maxProcessingTime = maxProcessingTime;
         this.selectionPolicy = selectionPolicy;
 
+        //initializeaza scheduler si strategia de repartizare
         scheduler = new Scheduler(numberOfServers);
         scheduler.changeStrategy(selectionPolicy);
 
@@ -57,6 +63,7 @@ public class SimulationManager implements Runnable {
         Random random = new Random();
         int totalServiceTime = 0;
 
+        //genereaza task-uri random in funstie de intervalele introduse
         for (int i = 1; i <= numberOfClients; i++) {
             int serviceTime = random.nextInt(maxProcessingTime - minProcessingTime + 1) + minProcessingTime;
             int arrivalTime = random.nextInt(maxArrivalTime - minArrivalTime + 1) + minArrivalTime;
@@ -68,13 +75,17 @@ public class SimulationManager implements Runnable {
             totalServiceTime += serviceTime;
         }
 
+        //sorteaza task-urile dupa timpul de sosire
         generatedTasks.sort(Comparator.comparingInt(Task::getArrivalTime));
+
+        //calculeaza timpul mediu de servire
         averageServiceTime = (double) totalServiceTime / numberOfClients;
     }
 
     private String formatState(int currentTime) {
         StringBuilder result = new StringBuilder();
 
+        //construieste starea curenta a simularii pentru afisare in log
         result.append("Time ").append(currentTime).append("\n");
         result.append("Waiting clients: ");
 
@@ -99,6 +110,7 @@ public class SimulationManager implements Runnable {
     }
 
     private void updatePeakHour(int currentTime) {
+        //actualizeaza ora de varf daca numarul curent de clienti este maxim
         int totalClients = scheduler.getTotalClientsInQueues();
         if (totalClients > peakClients) {
             peakClients = totalClients;
@@ -110,6 +122,7 @@ public class SimulationManager implements Runnable {
         int totalWaitingTime = 0;
         int count = 0;
 
+        //calculeaza timpul mediu de asteptare pt taskurile care au fost servite
         for (Task task : allTasks) {
             if (task.getStartTime() != -1) {
                 totalWaitingTime += task.getWaitingTime();
@@ -126,9 +139,11 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
+        //scrie evolutia simularii in fisierul log.txct
         try (PrintWriter writer = new PrintWriter(new FileWriter("log.txt"))) {
             int currentTime = 0;
 
+            //initializeaza log-ul si animatia la momentul 0
             javax.swing.SwingUtilities.invokeLater(() -> {
                 frame.setSimulationData("");
                 frame.updateAnimation(new ArrayList<>(generatedTasks),
@@ -136,9 +151,11 @@ public class SimulationManager implements Runnable {
                         0);
             });
 
+            //bucla principala a simularii
             while (currentTime <= timeLimit) {
                 scheduler.updateServerTimes(currentTime);
 
+                // muta in cozi task-urile care au ajuns la momentul curent
                 Iterator<Task> iterator = generatedTasks.iterator();
                 while (iterator.hasNext()) {
                     Task task = iterator.next();
@@ -150,28 +167,36 @@ public class SimulationManager implements Runnable {
 
                 updatePeakHour(currentTime);
 
+                //formateaza starea curenta pentru afisare
                 String state = formatState(currentTime);
 
+                //snapshot-uri folosite pentru actualizarea sigura a animatiei in GUI
                 int displayTime = currentTime;
                 List<Task> shoppingSnapshot = new ArrayList<>(generatedTasks);
                 List<Server> serverSnapshot = new ArrayList<>(scheduler.getServers());
 
+                //actualizeaza interfata grafica pe thread-ul Swing
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     frame.updateAnimation(shoppingSnapshot, serverSnapshot, displayTime);
                     frame.appendSimulationData(state);
                 });
 
+                //afisez in consola
                 System.out.print(state);
 
+                //scrie starea in fisier
                 writer.print(state);
                 writer.flush();
 
+                // daca nu mai sunt task-uri de generat si toate cozile sunt goale,
+                // simularea se opreste
                 if (generatedTasks.isEmpty() && scheduler.allQueuesEmpty()) {
                     break;
                 }
 
                 currentTime++;
 
+                //simuleaza trecerea unei unitati de timp reale
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -180,8 +205,10 @@ public class SimulationManager implements Runnable {
                 }
             }
 
+            //opreste toate serverele la final
             scheduler.stopAllServers();
 
+            //calculeaza statistica finala
             double averageWaitingTime = computeAverageWaitingTime();
 
             String finalStats = "Simulation finished.\n"
@@ -190,6 +217,7 @@ public class SimulationManager implements Runnable {
                     + "Peak hour: " + peakHour + "\n";
 
             int finalTime = currentTime;
+            //afiseaza rezultatele finale in interfata
             javax.swing.SwingUtilities.invokeLater(() -> {
                 frame.updateAnimation(new ArrayList<>(generatedTasks),
                         new ArrayList<>(scheduler.getServers()),
@@ -197,7 +225,7 @@ public class SimulationManager implements Runnable {
                 frame.appendSimulationData("\n" + finalStats);
                 frame.setStatistics(averageWaitingTime, averageServiceTime, peakHour);
             });
-
+            //adfiseaza rezultatele finale si in consola
             System.out.println(finalStats);
             writer.println(finalStats);
 

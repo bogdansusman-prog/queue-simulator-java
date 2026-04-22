@@ -31,6 +31,7 @@ public class SimulationFrame extends JFrame {
     private JTextArea textAreaLog;
     private JTextPane textPaneStats;
 
+    // panoul personalizat in care este desenata animatia cozilor
     private QueueAnimationPanel animationPanel;
 
 
@@ -43,6 +44,8 @@ public class SimulationFrame extends JFrame {
 
         configureComponents();
 
+        // initializeaza panoul de animatie si il pune intr-un scroll pane
+        // pentru a permite afisarea unui numar mare de cozi
         animationPanel = new QueueAnimationPanel();
         JScrollPane animationScrollPane = new JScrollPane(animationPanel);
         centerPanel.setLayout(new BorderLayout());
@@ -52,6 +55,7 @@ public class SimulationFrame extends JFrame {
     }
 
     private void configureComponents() {
+        //configureaza intervalele si valorile initiale pentru input-uri
         spClients.setModel(new SpinnerNumberModel(4, 1, 100000, 1));
         spQueues.setModel(new SpinnerNumberModel(2, 1, 1000, 1));
         spTimeLimit.setModel(new SpinnerNumberModel(60, 1, 100000, 1));
@@ -62,16 +66,19 @@ public class SimulationFrame extends JFrame {
         spMinService.setModel(new SpinnerNumberModel(2, 1, 100000, 1));
         spMaxService.setModel(new SpinnerNumberModel(4, 1, 100000, 1));
 
+        //configureaza strategiile de repartizare disponibile
         cbPolicy.setModel(new DefaultComboBoxModel<>(new String[]{
                 "SHORTEST_QUEUE",
                 "SHORTEST_TIME"
         }));
         cbPolicy.setSelectedItem("SHORTEST_TIME");
 
+        //configureaza zona de log
         textAreaLog.setEditable(false);
         textAreaLog.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         textAreaLog.setLineWrap(false);
 
+        //butonul clear cu statistici finale
         btnClear.addActionListener(e -> textAreaLog.setText(""));
 
         textPaneStats.setEditable(false);
@@ -108,11 +115,14 @@ public class SimulationFrame extends JFrame {
     }
 
     public SelectionPolicy getSelectionPolicy(){
+        //converteste optiunea selectata din combo box in
+        // enum-ul SelectionPolicy
         String value = (String) cbPolicy.getSelectedItem();
         return SelectionPolicy.valueOf(value);
     }
 
     public boolean validateInput() {
+        // valideaza datele introduse de utilizator inainte de pornirea simularii
         int clients = getNumberOfClients();
         int queues = getNumberOfServers();
         int timeLimit = getTimeLimit();
@@ -145,28 +155,34 @@ public class SimulationFrame extends JFrame {
     }
 
     public void addStartListener(Runnable action) {
+
         btnStart.addActionListener(e -> action.run());
     }
 
     public void setStartButtonEnabled(boolean enabled) {
+
         btnStart.setEnabled(enabled);
     }
 
     public void setSimulationData(String data) {
+
         textAreaLog.setText(data);
     }
 
     public void appendSimulationData(String data) {
+
         textAreaLog.append(data);
     }
 
     public void updateAnimation(java.util.List<org.example.model.Task> shoppingClients,
                                 java.util.List<org.example.model.Server> servers,
                                 int currentTime) {
+        // transmite starea curenta catre panoul de animatie
         animationPanel.updateState(shoppingClients, servers, currentTime);
     }
 
     public void showErrorMessage(String message) {
+        // afiseaza statisticile finale ale simularii
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
     }
 
