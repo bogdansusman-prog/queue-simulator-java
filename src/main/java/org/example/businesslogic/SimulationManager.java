@@ -124,7 +124,7 @@ public class SimulationManager implements Runnable {
 
         //calculeaza timpul mediu de asteptare pt taskurile care au fost servite
         for (Task task : allTasks) {
-            if (task.getStartTime() != -1) {
+            if (task.isFinished()) {
                 totalWaitingTime += task.getWaitingTime();
                 count++;
             }
