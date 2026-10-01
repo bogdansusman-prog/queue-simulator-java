@@ -1,4 +1,3 @@
-C:\Users\pcc\.jdks\openjdk-25\bin\java.exe "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.3\lib\idea_rt.jar=55634" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\pcc\Desktop\School\TP\PT2026_30224_Susman_Bogdan_Assignment_2\target\classes org.example.main.Main
 Time 0
 Waiting clients: (2, 2, 3) (4, 2, 4) (3, 11, 4) (1, 30, 2) 
 Queue 1: closed
